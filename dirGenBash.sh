@@ -1,20 +1,19 @@
-#Se declara el shebang para especificar el interprete de comandos  que se debe utilizar para ejecutar el script
-#!/bin/zsh
-#Creara una carpeta que llevara como nombre el año actual y dentro de las misma creara una carpeta con los 12 meses de año presedidos por 3 digits
-#Cabe mencionar que el script funciona en unas bash
-#obtenemos el año actual
+#declaracion de la shebang
+#!/bin/bash
+# Obtenemos el año actual
 ano=$(date +%Y)
 
-#creamos la carpeta
+#Creamos una carpeta con el nombre del año.El parametro -p se usa para que solo cree las carpetas que
+#no existen.
 mkdir -p "$ano"
-# creamos un array con el nombre de los meses.
-# Por algun motivo si pongo en la misma linea todo el array, al momento de ejecutarlo arroja el error `Syntax error: "(" unexpected` when creating an array
-meses=("001Enero" 
-"002Febrero" "003Marzo" "004Abril" "005Mayo" "006Junio" "007Julio" "008Agosto" "009Septiembre" "010Octubre" "011Noviembre" "012Diciembre")
 
-#Iteramos sobre el array para crear una carpeta con cada uno de los elementos
-#Se modifica la declaracion del array y la iteracin sobre él para adaptarse a la sintaxis de zsh.
-for i in {1..12}; do 
-    mes=${meses[i]}
-    mkdir "$ano/$mes"
+# Creamos un array con el nombre de los meses
+# El array no se debe declarar en una sola linea
+meses=("01-Enero" "02-Febrero" "03-Marzo" 
+"04-Abril" "05-Mayo" "06-Junio" "07-Julio" "08-Agosto" "09-Septiembre" "10-Octubre" 
+"11-Noviembre" "12-Diciembre")
+
+# Iteramos sobre cada mes y creamos una carpeta con su nombre dentro de la carpeta del año
+for meses in "${meses[@]}"; do
+  mkdir "$ano/$meses"
 done
