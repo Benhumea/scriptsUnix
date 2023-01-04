@@ -4,11 +4,14 @@
 ano=$(date +%Y)
 
 #creamos la carpeta
-mkdir "$ano"
+mkdir -p "$ano"
 # creamos un array con el nombre de los meses
-meses=("001Enero" "002Febrero" "003Marzo" "004Abril" "005Mayo" "006Junio" "007Julio" "008Agosto" "009Septiembre" "010Octubre" "011Noviembre" "012Diciembre")
+meses=("001Enero" 
+"002Febrero" "003Marzo" "004Abril" "005Mayo" "006Junio" "007Julio" "008Agosto" "009Septiembre" "010Octubre" "011Noviembre" "012Diciembre")
 
 #Iteramos sobre el array para crear una carpeta con cada uno de los elementos
-for meses in "${meses[@]}"; do
-mkdir "$ano/$meses"
+#Se modifica la declaracion del array y la iteracin sobre él para adaptarse a la sintaxis de zsh.
+for i in {1..12}; do 
+    mes=${meses[i]}
+    mkdir "$ano/$mes"
 done
