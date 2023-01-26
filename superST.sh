@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 #Super target version 1.0. Sera una mejora al script de savitar que nos creara un 3 archivos que despues podremos en la barra de informacion de gnome par que nos indique iplocal, target y vpn
 
@@ -11,32 +11,20 @@ echo "
        \/        \/          \/   
 
 "
-# Obtener la dirección IP local
-local_ip=$(ipconfig getifaddr en0)
 
-# Obtener la dirección IP de ping
-ping_ip=$(ping -c 1 google.com | awk 'NR==1 {print $3}' | sed 's/(//' | sed 's/)//')
+# Investigar los nombres de los adaptadores de red y de Wi-Fi
+network_adapters=($(ip link | grep -E "^[0-9]+: (enp|wlan)" -o | sed 's/: //'))
 
-# Obtener la dirección IP de la conexión VPN
-vpn_ip=$(ifconfig vpn0 | grep "inet " | awk '{print $2}')
+# Mostrar los adaptadores de red y Wi-Fi
+echo "Adaptadores disponibles:"
+for adapter in "${network_adapters[@]}"; do
+    echo "    $adapter"
+done
 
-# Crear la carpeta 'workfield' si no existe
-if [ ! -d "workfield" ]; then
-  mkdir ~/workfield
-fi
+# Preguntar al usuario cual adaptador desea utilizar
+read -i "Seleccione el adaptador de red que desea utilizar: " $network_adapters
 
-# Comprobar si hay archivos en la carpeta 'workfield'
-if [ "$(ls -A workfield)" ]; then
-  read -p "¿Su campo de juego a cambiara desea hacerlo? (s/n) " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Ss]$ ]]; then
-    rm -rf workfield/*
-  else
-    exit
-  fi
-fi
+# Obtener la dirección IP del adaptador seleccionado
+local_ip=$(ip -4 addr show $network_adapters | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 
-# Crear el archivo '.nfo' con la información obtenida
-echo "Local IP: $local_ip" >> ~/workfield/local.nfo
-echo "Ping IP: $ping_ip" >> ~/workfield/target.nfo
-echo "VPN IP: $vpn_ip" >> ~/workfield/htb.nfo
+
