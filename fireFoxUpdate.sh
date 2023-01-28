@@ -1,13 +1,23 @@
 # !/bin/bash
 # Assign the downloads folder to a variable
-descarga_folder="/home/walky/Descargas"
+descarga_folder="xdg-user-dir DOWNLOAD"
 
 # Search for files that begin with "firefox" and end with ".bz2" in the downloads folder
 archivo=$(find $descarga_folder -name "firefox*bz2")
 
+echo "
+ __      __        .__   __   .__ 
+/  \    /  \_____  |  | |  | _|__|
+\   \/\/   /\__  \ |  | |  |/ /  |
+ \        /  / __ \|  |_|    <|  |
+  \__/\  /  (____  /____/__|_ \__|
+       \/        \/          \/   
+Firefox Updater version 1.1
+"
+
 # If a file is found
 if [ -n "$archivo" ]; then
-    echo "Found file $archivo in the downloads folder"
+    echo "archivo encontrado $archivo en la carpeta Descargas"
 else
     echo "No se encontro el archivo de actualización."
     read -p "Ingresa la URL de descarga:" url
@@ -32,7 +42,7 @@ if [ -f $archivo ]; then
     sudo rm -rf $firefox_folder
     echo "Firefox se ha actualizado."
     # Launch Firefox
-    ./firefox-bin &> /dev/null & disown
+    /usr/lib/firefox-esr/firefox-bin %u &> /dev/null & disown
 else
     echo "The file $archivo does not exist"
     exit 1
