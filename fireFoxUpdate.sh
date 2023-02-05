@@ -1,6 +1,6 @@
-# !/bin/bash
+# !/bin/zsh
 # Assign the downloads folder to a variable
-descarga_folder="xdg-user-dir DOWNLOAD"
+descarga_folder="$(xdg-user-dir DOWNLOAD)"
 
 # Search for files that begin with "firefox" and end with ".bz2" in the downloads folder
 archivo=$(find $descarga_folder -name "firefox*bz2")
