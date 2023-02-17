@@ -40,7 +40,10 @@ function download_videos {
 
     # Descargamos los videos con la mejor calidad disponible
     echo "Descargando videos con calidad media..."
-    yt-dlp -a "$input_file" -f 'best[height<=720]' -o "$output_dir/%(title)s.%(ext)s"
+    
+# Download the video in the selected format
+yt-dlp -a "$input_file" -f best -o "$output_dir/%(title)s.%(ext)s"
+
 }
 
 # Definimos una función que muestra el menú de opciones y ejecuta la opción seleccionada por el usuario
