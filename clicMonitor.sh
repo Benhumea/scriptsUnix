@@ -1,44 +1,74 @@
 #!/bin/bash
 
-# Pedimos al usuario que ingrese el nombre del archivo de salida
-read -p "Ingresa el nombre del archivo de salida: " output_file
+# Definimos una función que escucha los enlaces del portapapeles y los guarda en un archivo
+function listen_links {
+    # Pedimos al usuario que ingrese el nombre del archivo de salida
+    read -p "Ingresa el nombre del archivo de salida: " output_file
 
-# Creamos el archivo de salida y escribimos la primera línea
-echo "Historial del clipboard:" > "$output_file"
+    # Creamos el archivo de salida y escribimos la primera línea
+    echo "Historial del clipboard:" > "$output_file"
 
-# Creamos una lista para almacenar los enlaces ya vistos
-seen_links=()
+    # Creamos una lista para almacenar los enlaces ya vistos
+    seen_links=()
 
-# Definimos una función que escribe el contenido actual del clipboard en el archivo de salida
-function write_to_file {
-    clipboard=$(xclip -selection clipboard -o)
-
-    # Verificamos si el contenido del clipboard es un enlace
-    if [[ "$clipboard" =~ ^(http|https)://.* ]]; then
-        # Verificamos si el enlace actual ya ha sido visto antes
-        if [[ " ${seen_links[@]} " =~ " ${clipboard} " ]]; then
-            echo "Enlace repetido: $clipboard"
-        else
-            # Escribimos el enlace en el archivo de salida
-            echo "$clipboard" >> "$output_file"
-
-            # Agregamos el enlace a la lista de enlaces ya vistos
-            seen_links+=("$clipboard")
+    # Creamos un bucle que se ejecuta hasta que se use Ctrl + C
+    while true; do
+        # Escribimos el contenido actual del clipboard en el archivo de salida
+        clipboard=$(xclip -selection clipboard -o)
+        if [[ "$clipboard" =~ ^(http|https)://.* ]]; then
+            if [[ " ${seen_links[@]} " =~ " ${clipboard} " ]]; then
+                echo "Enlace repetido: $clipboard"
+            else
+                echo "$clipboard" >> "$output_file"
+                seen_links+=("$clipboard")
+                echo "Enlace guardado: $clipboard"
+            fi
+            # Limpiamos el portapapeles cada 5 segundos
+            sleep 5
+            echo -n | xclip -selection clipboard
         fi
-    fi
+    done
 }
 
-# Creamos un bucle que se ejecuta hasta que se use Ctrl + C
-while true; do
-    # Escribimos el contenido actual del clipboard en el archivo de salida
-    write_to_file
+# Definimos una función que descarga los videos de una lista de enlaces
+function download_videos {
+    # Pedimos al usuario que ingrese el nombre del archivo de entrada
+    read -p "Ingresa el nombre del archivo de enlaces: " input_file
 
-    # Esperamos 1 segundo antes de revisar el clipboard de nuevo
-    sleep 1
-done
+    # Pedimos al usuario que ingrese el directorio de salida para los videos descargados
+    read -p "Ingresa el directorio de salida para los videos descargados: " output_dir
 
-# Si se presiona Ctrl + C, usamos los enlaces guardados para descargar los videos con la mejor resolución
-if [ $? -eq 0 ]; then
-    echo "Descargando videos con mejor resolución..."
-    yt-dlp -a "$output_file" -f 'bestvideo[height>=1080]+bestaudio/best[height>=1080]' --merge-output-format mp4
-fi
+    # Descargamos los videos con la mejor calidad disponible
+    echo "Descargando videos con calidad media..."
+    yt-dlp -a "$input_file" -f 'best[height<=720]' -o "$output_dir/%(title)s.%(ext)s"
+}
+
+# Definimos una función que muestra el menú de opciones y ejecuta la opción seleccionada por el usuario
+function show_menu {
+    while true; do
+        echo ""
+        echo "Selecciona una opción:"
+        echo "1. Escuchar enlaces del portapapeles y guardarlos en un archivo"
+        echo "2. Descargar videos de una lista de enlaces"
+        echo "3. Salir del script"
+        read -p "Opción: " option
+
+        case $option in
+            1)
+                listen_links
+                ;;
+            2)
+                download_videos
+                ;;
+            3)
+                exit 0
+                ;;
+            *)
+                echo "Opción inválida"
+                ;;
+        esac
+    done
+}
+
+# Ejecutamos la función para mostrar el menú de opciones
+show_menu
