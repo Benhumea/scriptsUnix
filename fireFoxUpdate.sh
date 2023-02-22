@@ -45,6 +45,7 @@ if [ -f $archivo ]; then
     sudo mv -f $firefox_folder/* /usr/lib/firefox-esr
     # Remove the extracted folder
     sudo rm -rf $firefox_folder
+    rm $descarga_folder/firefox.tar.bz2 
     echo "Firefox se ha actualizado."
     # Launch Firefox
     sudo walky
