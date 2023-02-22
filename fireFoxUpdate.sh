@@ -33,6 +33,11 @@ if [ -f $archivo ]; then
         echo "Firefox esta en uso, por favor cierrelo para actualizar."
         exit 1
     fi
+    #Eliminamos la instalacion anterior 
+    cd /usr/lib/firefox-esr
+    rm -rf **
+    # Volvemos a la carpeta de descarga para continuar con la actualizacion
+    cd $descarga_folder
     # Extract the "firefox.tar.bz2" file
     tar -xvf $archivo
     #Move the extracted files to "/usr/lib/firefox-esr"
@@ -42,6 +47,7 @@ if [ -f $archivo ]; then
     sudo rm -rf $firefox_folder
     echo "Firefox se ha actualizado."
     # Launch Firefox
+    sudo walky
     /usr/lib/firefox-esr/firefox-bin %u &> /dev/null & disown
 else
     echo "The file $archivo does not exist"
