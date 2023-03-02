@@ -1,5 +1,5 @@
 # Ruta del directorio que deseas eliminar
-$directoryPath = "D:\ARCHIVOS MC-MNV - copia"
+$directoryPath = "C:\Users\jose.benhumea\Documents\Workbook 736"
 # Numero de veces que se sobrescribirá el contenido de los archivos antes de ser eliminados
 $numberOfOverwrites = 5
 # Genera el contenido aleatorio que se utilizará para sobrescribir los archivos

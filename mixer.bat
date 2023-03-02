@@ -1,0 +1,9 @@
+@echo off
+echo Iniciando el respaldo...
+start /wait powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File "F:\Documentos\scriptsUnix\Backer.ps1"
+echo El respaldo ha finalizado.
+echo Iniciando el borrado permanente...
+powershell -WindowStyle Hidden -ExecutionPolicy Bypass -File "F:\Documentos\scriptsUnix\Cleaner.ps1"
+echo El borrado permanente ha finalizado.
+echo Espere 5 segundos antes de cerrar la ventana...
+timeout /t 5 /nobreak > nul
