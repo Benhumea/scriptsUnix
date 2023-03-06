@@ -6,7 +6,7 @@ function listen_links {
     read -p "Ingresa el nombre del archivo de salida: " output_file
 
     # Creamos el archivo de salida y escribimos la primera línea
-    echo "Historial del clipboard:" > "$output_file"
+    echo "Historial del clipboard:" >> "$output_file"
 
     # Creamos una lista para almacenar los enlaces ya vistos
     seen_links=()
@@ -42,7 +42,7 @@ function download_videos {
     echo "Descargando videos con calidad media..."
     
 # Download the video in the selected format
-yt-dlp -a "$input_file" -f best -o "$output_dir/%(autonumber)s.%(ext)s" --trim-filenames 7
+yt-dlp -a "$input_file" -f best -o "$output_dir/%(autonumber)s.%(ext)s"
 
 }
 
